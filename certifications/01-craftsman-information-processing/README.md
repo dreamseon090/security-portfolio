@@ -65,7 +65,7 @@ The qualification now runs as *Craftsman Programming* with restructured written 
 
 ## Preparation
 
-<img src="assets/study-plan.png" width="560" alt="Study schedule prepared before the exam">
+[📅 View study plan](assets/study-plan.png)
 
 | Metric | Detail |
 |---|---|
