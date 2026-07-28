@@ -7,7 +7,7 @@
 | **Certification** | Craftsman Information Processing (정보처리기능사) |
 | **Issuing authority** | Human Resources Development Service of Korea (HRDK) |
 | **Type** | National technical qualification — entry level |
-| **Earned** | \2025-12-24 |
+| **Earned** | 2025-12-24 |
 | **Credential ID** | `25404270225Q` |
 | **Verification** | [Q-Net](https://www.q-net.or.kr) — Korea's official national technical qualification portal |
 | **Validity** | Lifetime |
@@ -41,9 +41,16 @@ Broadly comparable in scope to an AQF Certificate III–IV level IT qualificatio
 | PC operating systems | Windows and Unix/Linux structure and administration |
 | Data communications | Network protocols and data transmission |
 
+**Format.** 60 multiple-choice questions (four options each) in 60 minutes, delivered
+as a computer-based test with the result shown immediately on completion. Pass mark is
+60 out of 100 — 36 correct answers — with no per-subject minimum.
+
 **Practical exam**
 
-Written-response format covering programming logic, database design, and system concepts. Historically the lower-passing stage of the two — the national practical pass rate sits well below the written stage.
+**Format.** A 90-minute written-response paper on information processing practice,
+covering programming logic, database design, and system concepts. Pass mark is 60 out
+of 100. This is historically the harder of the two stages — the national pass rate for
+the practical sits well below the written stage.
 
 **Curriculum change (from 2026)**
 
@@ -75,7 +82,8 @@ The qualification now runs as *Craftsman Programming* with restructured written 
 | **Method** | Official curriculum first, then mock exams and exam-blueprint analysis to target weak subjects |
 | **Attempts** | Passed both stages on the first attempt |
 
-**Starting point:** effectively zero formal IT knowledge — I began by learning what an IP address is. Reaching a verified qualification in four months of self-directed study is the part of this certification I actually consider meaningful.
+**Starting point:** effectively zero formal IT knowledge — I began by learning what an IP address is. Reaching a verified qualification in four months of self-directed study is the part of this certification I actually consider meaningful.Both certifications were completed within two weeks of each other — Network Administrator
+Level 2 on 9 December 2025, this one on 24 December.
 
 ---
 

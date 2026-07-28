@@ -93,7 +93,10 @@ Of the qualifications I hold outside the offensive security track, this one carr
 | **Study method** | Self-study supplemented by collaborative study groups and shared resources through KakaoTalk open chat |
 | **Attempts** | Passed both stages on the first attempt |
 
-Running two certification tracks in parallel at five hours a day was deliberate — the subject overlap between the two (operating systems, data communications) meant each reinforced the other rather than competing for time.
+Running two certification tracks in parallel was deliberate — the subject overlap
+(operating systems, data communications) meant each reinforced the other rather than
+competing for study time. Both were completed within the same month: this certification
+on 9 December 2025, and Craftsman Information Processing on 24 December.
 
 ---
 
