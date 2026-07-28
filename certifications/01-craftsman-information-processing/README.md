@@ -10,7 +10,7 @@
 | **Earned** | 2025-12-24 |
 | **Credential ID** | `25404270225Q` |
 | **Verification** | [Q-Net](https://www.q-net.or.kr) — Korea's official national technical qualification portal |
-| **Validity** | Lifetime |
+| **Validity** | 2 years |
 
 <img src="assets/certificate.png" width="420" alt="Certificate of qualification">
 
