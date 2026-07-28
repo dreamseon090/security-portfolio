@@ -81,6 +81,7 @@ Of the qualifications I hold outside the offensive security track, this one carr
 ## Preparation
 
 [View study plan](assets/study-plan.png)
+
 [View shared study materials](assets/study-materials.png)
 
 | Item | Detail |
