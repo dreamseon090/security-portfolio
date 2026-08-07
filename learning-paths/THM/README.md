@@ -55,10 +55,14 @@ platform.
 <br>
 
 <img src="assets/pre-security.png" width="480" alt="Pre Security path certificate">
+
 <img src="assets/cyber-security-101.png" width="480" alt="Cyber Security 101 path certificate">
+
 <img src="assets/jr-penetration-tester.png" width="480" alt="Jr Penetration Tester path certificate">
+
 <img src="assets/web-application-pentesting.png" width="480" alt="Web Application Pentesting path certificate">
+
 <img src="assets/web-application-red-teaming.png" width="480" alt="Web Application Red Teaming path certificate">
-<img src="assets/red-teaming.png" width="480" alt="Red Teaming path certificate">
+
 
 </details>
