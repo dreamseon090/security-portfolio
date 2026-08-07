@@ -14,14 +14,15 @@ kept separate from [certifications](../../certifications/) for that reason.
   Certificate 열: THM에서 각 패스 → Share 버튼 → 링크 복사 → <url> 자리에 붙여넣기
 -->
 
-| # | Path | Difficulty | Period | Certificate |
-|---|---|---|---|---|
-| 1 | Pre Security | Easy | 2025-12-01 → 2025-12-17 | [Verify](<url>) |
-| 2 | Cyber Security 101 | Easy | 2026-01-01 → 2026-03-12 | [Verify](<url>) |
-| 3 | Jr Penetration Tester | Medium | 2026-03-13 → 2026-03-30 | [Verify](<url>) |
-| 4 | Web Application Pentesting | Medium | 2026-04-01 → 2026-06-29 | [Verify](<url>) |
-| 5 | Web Application Red Teaming | Hard | 2026-04-01 → 2026-06-16 | [Verify](<url>) |
-| 6 | Red Teaming | Hard | 2026-06-17 → 2026-07-01 | [Verify](<url>) |
+| # | Path | Difficulty | Period |
+|---|---|---|---|
+| 1 | Pre Security | Easy | 2025-12-01 → 2025-12-17 |
+| 2 | Cyber Security 101 | Easy | 2026-01-01 → 2026-03-12 |
+| 3 | Jr Penetration Tester | Medium | 2026-03-13 → 2026-03-30 |
+| 4 | Web Application Pentesting | Medium | 2026-04-01 → 2026-06-29 |
+| 5 | Web Application Red Teaming | Hard | 2026-04-01 → 2026-06-16 |
+| 6 | Red Teaming | Hard | 2026-06-17 → 2026-07-01 |
+
 
 **Total:** 6 learning paths completed between December 2025 and July 2026, reaching the top 1% of users globally.
 
@@ -64,5 +65,6 @@ platform.
 
 <img src="assets/web-application-red-teaming.png" width="480" alt="Web Application Red Teaming path certificate">
 
+<img src="assets/red-teaming.png" width="480" alt="Red Teaming path certificate">
 
 </details>
