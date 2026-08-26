@@ -42,7 +42,7 @@ evil-winrm -i IP -u svc-alfresco -p PASS
 ```
 evil-winrm을 통해 초기 접근에 성공했다.
 
-![initial shell](attach/_Attachments/Pasted%20image%2020260826181417.png)
+![initial shell](attach_real/Pasted%20image%2020260826181417.png)
 
 ## Privilege Escalation
 이후 권한 상승을 위해 리눅스에서 대상 도메인의 BloodHound 정보를 수집했다.
@@ -54,7 +54,7 @@ bloodhound -start
 ```
 이후 BloodHound GUI를 연 다음, svc-alfresco 계정부터 Domain Admin까지의 공격 경로를 조회해보았다.
 
-![bloodhound](attach/_Attachments/Pasted%20image%2020260826190402.png)
+![bloodhound](attach_real/Pasted%20image%2020260826190402.png)
 
 위 그래프를 통해 svc-alfresco 계정이 Service Accounts 그룹에 속하고, 이 그룹은 Privileged IT Accounts 그룹에 속함을 확인했다. 또한 이 그룹은 Account Operators 그룹에 속해 있었고, Account Operators는 Exchange Windows Permissions 그룹에 대해 GenericAll 권한을 가지고 있어 해당 그룹에 임의의 유저를 추가할 수 있었다.
 ```bash
@@ -72,7 +72,7 @@ secretsdump 'htb.local'/'svc-alfresco':'PASSWORD'@'DC_IP' -just-dc-user Administ
 ```
 이로써 Domain Admin 계정의 NTLM 해시를 얻었고, 이후 winrm을 통해 Pass-the-Hash로 Domain Admin 접근에 성공했다.
 
-![root](attach/_Attachments/Pasted%20image%2020260826185405.png)
+![root](attach_real/Pasted%20image%2020260826185405.png)
 
 ## New Inform
 BloodHound를 통해 취약한 권한 관계를 어떻게 파악하고 활용할 수 있는지 새롭게 알게 되었고, AS-REP Roasting 공격을 항상 시도해봐야 한다는 것을 배웠다.
