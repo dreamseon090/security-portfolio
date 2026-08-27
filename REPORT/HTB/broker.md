@@ -21,7 +21,7 @@ PASS: admin
 ```
 로그인 성공 후 Apache ActiveMQ 서비스가 실행되고 있다는 것을 알게 되었다. 웹을 뒤져본 결과 Apache ActiveMQ v5.15.15 버전이라는 것을 알게 되었다.
 
-![apach](/HTB/attach_real/Pasted%20image%2020260827152104.png)
+![apach](attach_real/Pasted%20image%2020260827152104.png)
 
 **exploit**
 구글링 해본 결과 이 버전은 CVE-2023-46604 취약점이 있다는 것을 알 수 있었다. 이후 PoC를 검색한 결과 Python 코드와 xml 코드를 제공받았다. 원리를 요약하면:
@@ -54,12 +54,12 @@ PASS: admin
 
 `nc -nlvp 4444`
 
-![user](/HTB/attach_real/Pasted%20image%2020260827154014.png)
+![user](attach_real/Pasted%20image%2020260827154014.png)
 
 ## Privilege Escalation
 쉘을 획득하자마자 `sudo -l`을 실행해본 결과, NOPASSWORD 항목에 `/usr/sbin/nginx`가 있어 sudo로 실행할 수 있음을 확인했다.
 
-![priv](/HTB/attach_real/Pasted%20image%2020260827163007.png)
+![priv](attach_real/Pasted%20image%2020260827163007.png)
 
 GTFOBins라는 권한 상승 정보 사이트에서 nginx로 권한 상승이 가능한 것을 찾아보았고, 타겟 서버에서 nginx를 열어두면 내 컴퓨터에서 파일 정보를 얻을 수 있었다.
 
@@ -117,7 +117,7 @@ ssh -i /tmp/broker root@IP
 ```
 이를 통해 root 쉘을 얻게 되었다.
 
-![root](/HTB/attach_real/Pasted%20image%2020260827160047.png)
+![root](attach_real/Pasted%20image%2020260827160047.png)
 
 ## New Inform
 - ssh-keygen을 통해 내 칼리 쉘로 상대 쉘에 접속하는 방법을 알게 되었다. `path: /.ssh/authorized_keys`
