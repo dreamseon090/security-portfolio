@@ -18,7 +18,7 @@ smbclient //IP/support-tools -N
 ```
 폴더 안에는 여러 zip 파일들과 윈도우 전용 툴들이 있었다. 일단 모두 다운로드한 후 `nxc`를 사용하여 rid-brute를 시도한 결과 유저 리스트도 얻을 수 있었다.
 ```bash
-nxc smb IP -u jdskl -p '' --rid-brute | tee user
+nxc smb IP -u jdskl -p '' -brute | tee user
 ```
 ```bash
 cat user | grep SidTypeUser | grep -oP 'SUPPORT\\\K[^ ]+(?= \(SidTypeUser\))' > users.txt
