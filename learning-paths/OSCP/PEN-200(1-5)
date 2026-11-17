@@ -1,0 +1,256 @@
+# PWK / PEN-200 치트시트 — 모듈 2~5 (코스 기초)
+
+> OSCP 준비용 요약 노트. OffSec PEN-200 교재의 **모듈 2(코스 개요) · 3(사이버보안 입문) · 4(학습 전략) · 5(리포트 작성)** 핵심 정리.
+> 🔴 = OSCP 시험 직결 / ⭐ = 꼭 암기 / 💡 = 실전 팁
+>
+> _작성: 2026-11-17_
+
+---
+
+## 📋 목차
+
+- [모듈 2 — 코스 개요 & 환경 셋업](#모듈-2--코스-개요--환경-셋업)
+- [모듈 3 — 사이버보안 입문 (핵심 이론)](#모듈-3--사이버보안-입문-핵심-이론)
+- [모듈 4 — 효과적인 학습 전략](#모듈-4--효과적인-학습-전략)
+- [모듈 5 — 침투 테스트 리포트 작성 🔴](#모듈-5--침투-테스트-리포트-작성-)
+- [🔴 OSCP 시험 핵심 요약](#-oscp-시험-핵심-요약)
+
+---
+
+# 모듈 2 — 코스 개요 & 환경 셋업
+
+## 코스 자료 & 플래그
+- 코스 = **학습 모듈(텍스트) + 강의 영상** → 둘 다 봐야 함 (서로 보완).
+- 연습문제 2종: 단순 Q&A / 머신+플래그(`OS{random-hash}`).
+
+### ⭐ 플래그(flag) 규칙
+- 플래그는 **머신 부팅 시 동적 생성**, **종료 시 만료**.
+- **반드시 revert(리버트)/전원 종료 _전에_ 제출**. 리버트 후 예전 답 → 거부됨.
+
+## VPN 연결 (랩 접속의 관문)
+OLP → Explore → Courses → PEN-200 → Connectivity의 VPN 다운로드 → `.ovpn` 파일
+
+```bash
+sudo updatedb                          # locate DB 갱신
+locate universal.ovpn                  # ovpn 위치 찾기
+mkdir /home/kali/offsec
+mv ~/Downloads/universal.ovpn /home/kali/offsec/
+cd ../offsec
+sudo openvpn universal.ovpn            # 이 창 열어둔 채 유지
+```
+- 마지막 줄 **`Initialization Sequence Completed`** = 연결 성공.
+- 💡 VPN 터미널 닫으면 끊김 → 작업은 **새 탭**에서. 종료는 `Ctrl+C`.
+
+### 💡 실전 포인트
+| 항목 | 내용 |
+|---|---|
+| 랩 환경 | **적대적(hostile)** 으로 간주 — Kali에 민감정보 저장 금지 |
+| 금지 | **Client-to-client 트래픽** (어기면 코스 접근 종료) |
+| IP | **본인에게 할당된 TUN0 IP** 사용 (교재 IP는 예시) |
+| 연결 문제 | **VPN 팩 새로 다운로드**가 보통 해결책 |
+| VMware만 공식 지원 | VirtualBox·Hyper-V는 되지만 지원 X |
+
+### 💡 SSH 접속 (연습 머신용)
+```bash
+ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" learner@<IP>
+```
+- 머신 리버트로 호스트 키 바뀔 때 known-hosts 꼬임 방지.
+- ⚠️ **실무에선 MITM 위험이라 쓰면 안 됨** — 학습 편의용.
+
+## 🔴 챌린지 랩 — OSCP 시험 범위
+| 랩 | 유형 | OSCP 관련성 |
+|---|---|---|
+| **0–3** | 시나리오 (AD Domain Admin 탈취 목표) | 다중 모듈 종합 |
+| **4–6** | **시험형 (각 6대 OSCP+ 머신)** | 🔴 **실제 시험 난이도에 가장 가까운 모의시험** |
+| **7–10** | 고난도 (PEN-300/OSEP 수준) | ❌ **OSCP+ 시험 범위 밖 — 시간 쏟지 말 것** |
+
+**권장 순서**: 모듈 → Capstone → Assembling the Pieces → 챌린지 랩
+
+---
+
+# 모듈 3 — 사이버보안 입문 (핵심 이론)
+
+> ISC2 CC / eJPT와 많이 겹침. CIA·최소권한·Defense in Depth·Kill Chain만 집중 복습.
+
+## 핵심 용어 4종 ⭐ (OSCP 내내 쓰임)
+| 용어 | 정의 |
+|---|---|
+| **Risk(위험)** | 부정적 사건의 *확률* × *영향* |
+| **Threat(위협)** | 자산에 위험을 가하는 것 (사람 or 자연) |
+| **Threat actor** | 위협을 구현하는 사람/집단 |
+| **Vulnerability(취약점)** | 위협이 피해를 주게 하는 결함 (모든 결함 ≠ 취약점) |
+| **Exploit** | (명사) 취약점 악용 절차 / (동사) 그 절차 실행 |
+| **Attack surface** | 취약할 수 있는 모든 접점 |
+| **Attack vector** | 특정 취약점 + 익스플로잇 조합 |
+
+> 💡 대표 예시: **Log4Shell** (2021, Apache Log4j) — 입력값 미검증 RCE, CVSS **10.0 Critical**
+
+## ⭐⭐ CIA 삼요소 (가장 기본 — 반드시 암기)
+| 요소 | 핵심 질문 | 대표 공격 | 사례 |
+|---|---|---|---|
+| **Confidentiality (기밀성)** | 권한 없는 자가 접근 가능? | 도청, credential stuffing | T-Mobile (5천만 명 유출) |
+| **Integrity (무결성)** | 의도치 않게 변경되나? | 임의 코드 실행(ACE) | WhisperGate (MBR 덮어쓰기) |
+| **Availability (가용성)** | 필요할 때 접근 가능? | 서비스 거부(DoS) | Viasat AcidRain (위성인터넷) |
+
+- 상황마다 우선순위 다름: 일기=기밀성 / 의료 처방=무결성 중요.
+- 💡 **보안 ↔ 가용성 트레이드오프**: 보안이 너무 강하면 가용성↓ → 사용자 불편 → 조직 비효율.
+
+## ⭐ 보안 원칙 (실무·시험 단골)
+- **Principle of Least Privilege(최소 권한)**: 필요한 최소 권한만. 사람뿐 아니라 **머신·방화벽에도 적용**. (Capital One 위반)
+- **Zero Trust**: 암묵적 신뢰 제거 (JITA, JEA, 암호화, 동적 접근제어, 마이크로세그멘테이션).
+- **Open Security**: 보안이 *비밀 유지에 의존 X* — 공격자가 구현을 알아도 막혀야. (단, 비밀번호는 예외)
+- **Defense in Depth(심층 방어)**: 여러 계층 방어 — 하나 뚫려도 다음이 막음.
+
+## 보안 모델
+| 모델 | 목적 | 규칙 |
+|---|---|---|
+| **Bell–LaPadula** | 기밀성 | no read up, no write down |
+| **Biba** | 무결성 | no read down, no write up |
+| **Clark-Wilson** | 무결성 | subject-program-object 트리플 |
+| **RBAC** | 접근제어 | 역할 기반 |
+| **ABAC** | 접근제어 | 속성 기반 (더 세밀·동적) |
+
+## 백업 ⭐
+| 유형 | 백업 대상 | 속도 | 복구 | 비용 |
+|---|---|---|---|---|
+| **Full** | 전체 | 느림 | 단순 | 비쌈 |
+| **Differential** | 마지막 full 이후 | 중간 | 중간 | 중간 |
+| **Incremental** | 마지막 백업 이후 | 빠름 | 복잡 | 쌈 |
+
+- **Hot**(가동 중) / **Cold**(정지 중, 더 안전)
+- **3-2-1 규칙**: 복사본 **3**개, 매체 **2**종류, **1**개는 오프사이트.
+
+## 법·표준·프레임워크 (OSCP엔 거의 안 나옴 — 가볍게)
+- **법**: HIPAA(의료) / FERPA(교육) / GLBA(금융) / GDPR(EU·잊힐 권리·EU 밖도 적용) / CCPA(캘리포니아)
+- **표준**: PCI DSS(카드) / CIS Top 18(IG3 최강) / **NIST CSF** (Govern·Identify·Protect·Detect·Respond·Recover)
+- **MITRE ATT&CK**(공격자 TTP) / **D3FEND**(방어자)
+- **Cyber Kill Chain** (Lockheed Martin, **7단계**): recon → weaponization → delivery → exploitation → installation → C2 → actions on objectives
+- **FedRAMP**: 미국 연방 클라우드 보안
+
+## 🔴 커리어 — 네가 목표로 하는 쪽 (Attack)
+| 역할 | 하는 일 | OffSec 코스 |
+|---|---|---|
+| **Network Penetration Tester** | 네트워크 취약점 발견·악용 | **PEN-100/200/300 (OSCP)** |
+| Web Application Tester | 웹앱 취약점 | WEB track |
+| Cloud Penetration Tester | 클라우드 인프라 | CLD-100 |
+| Exploit Developer | 익스플로잇 개발·리버싱 | EXP-301/312 |
+| Vulnerability Researcher | 신규 취약점 연구·PoC | EXP-301 |
+
+---
+
+# 모듈 4 — 효과적인 학습 전략
+
+> 실습 머신 없는 이론 모듈. 하지만 **4.6(시험 조언)은 OSCP 직결**.
+
+## 기억 메커니즘
+- **Dual Coding(이중 부호화)**: 같은 정보를 **다른 방식(글+영상)으로 반복** → 기억 정착↑.
+- **Forgetting Curve (Ebbinghaus)**: 직후 100% → **20분 후 58%** → 하루 후 23%.
+  - 💡 → **사실 암기보다 "방법(method)"을 익혀라** (명령어 암기보다 찾는 법).
+- **Cognitive Load(인지 부하)**: 한 번에 너무 많은 정보 → 학습 방해. 불필요한 정보(extraneous load) 줄이기.
+
+## OffSec 교육 철학 ⭐
+- **Demonstration Method**: 강사가 **실제 단계+출력까지 시연** (검증 습관 포함).
+- **Learning by Doing**: 직접 하는 게 보는 것보다 기억에 훨씬 좋음.
+- **Struggle > Repetition**: (콩주머니 실험) **막혔다 회복하는 연습**이 핵심 → **Try Harder Mindset**.
+- **Interleaving(끼워넣기)**: 여러 주제 섞어 배움 → 뇌가 더 많은 연결.
+- 💡 **"the skill, not the tool"**: *무엇*(command)보다 *왜*(why)에 집중.
+
+## 공부법 도구상자
+| 전술 | 요약 |
+|---|---|
+| **Cornell Notes** | 페이지 3구역: Cue(키워드) / Notes(본문) / Summary(요약) |
+| **Retrieval Practice** | 자기 퀴즈. Leitner System(플래시카드) — **문법·구문 암기용** |
+| **Spaced Practice** | 벼락치기 반대 — 며칠~몇 주 분산 (수면 필수) |
+| **SQ3R** | Survey→Question→Read→Recite→Review |
+| **Feynman Technique** | 주제 학습 → **초보자에게 설명** → 빈틈 발견 → 재학습 |
+
+## 🔴 시험 조언 (OSCP 직결)
+- OffSec 자격증 = **"주어지는 게 아니라 획득하는 것"** — 운·추측 불가.
+- **Not Yet Mindset**: "난 못 해" → **"난 _아직_ 못 해"**.
+- ⭐ **핵심 데이터: PEN-200 랩 머신을 더 많이 풀수록 OSCP 합격률이 직접적으로 올라감. 지름길 없음.**
+- 2가지 전술: ① 시험 **준비**(자료·영상·연습) ② 시험 **이해**(OffSec 헬프의 시험 설명·enumeration 접근법·proof 제출법, 후기 영상).
+
+---
+
+# 모듈 5 — 침투 테스트 리포트 작성 🔴
+
+> ⭐⭐ **OSCP+는 리포트 제출 필수.** 랩을 다 뚫어도 리포트 부실하면 탈락. **지금부터 노트 습관 들이기.**
+
+## 5.1 노트 작성
+
+### 노트를 남기는 이유 (재현성)
+1. 이슈가 진짜임을 **재현(repeat)** 증명
+2. 수정 후 **고쳐졌는지 재확인**
+3. 시스템 장애 시 **테스트가 원인인지 판별**
+
+### ⭐ Rules of Engagement (RoE, 교전 규칙)
+- 테스트 **시작 전 반드시 합의** — 허용/금지 (DoS 금지, 사회공학 금지 등).
+- 레드팀엔 **referee(심판)**가 규칙 준수 감시.
+
+### ⭐ 노트 구조 (Top-Down)
+- **정확히 한 일을 그대로 기록**: 모든 명령어·수정 코드·GUI 클릭까지.
+- 넓게 시작 → 점점 좁혀가며 세부 추가.
+- **웹 취약점 노트 포맷**:
+  - Application Name / URL / **Request Type**(GET/POST+변경) / Issue Detail(CVE·영향) / **PoC Payload** ⭐(가장 중요)
+
+### 노트 도구
+| 도구 | 특징 |
+|---|---|
+| **CherryTree** | **Kali 기본 탑재**, SQLite, HTML/PDF export, 트리 구조 |
+| **Obsidian** | 마크다운, Vault, 인라인 이미지·코드블록·PDF 생성 💡 추천 |
+| Sublime | 구문 강조 좋지만 다중 언어·스크린샷 인라인 X |
+
+### 💡 스크린샷 (리포트 핵심 증거)
+- **좋은 스크린샷**: 한 장에 **개념 하나만** / 가독성 / 클라이언트 요소(URL·로고) / 설명 대상 포함 / **텍스트로 보완**.
+- **Caption**: 그림을 **8~10단어**로 묘사 (추가 맥락은 별도 문단).
+- **Flameshot**: OS 무관 오픈소스 스크린샷 도구 (하이라이트·픽셀화 내장) 💡.
+
+## 5.2 리포트 작성 🔴
+
+### 리포트의 목적
+- **리포트 = 가치 전달 수단**. 취약점을 찾아도 전달 못 하면 의미 없음.
+- 클라이언트가 원하는 건 공격이 아니라 **"앞으로 나아갈 길"**: 결함 + 즉각 수정법 + 미래 예방.
+- 💡 **클라이언트 맥락이 심각도를 바꿈**: 같은 패치 누락도 병원(격리 권고) vs 은행(Critical)이 다름.
+
+### 리포트 구조 ⭐
+1. **Executive Summary** (경영진용 — 리포트 **첫 섹션**)
+   - Scope / Timeframe / RoE / 지원 인프라·계정(우리가 만든 계정 = 삭제 확인용)
+   - 취약점 **과장도 축소도 금지**
+   - 유사 취약점 **그룹화 → 트렌드** 제시 (예: XSS+SQLi+파일업로드 = 입력값 검증 전반 실패 → 개발자 교육)
+   - **잘한 점도 언급** (기술팀 수용성↑)
+   - ⭐ **절대적 표현 금지**: "불가능했다" ❌ → "할 수 없었다(unable to)" ✅ (우리도 틀릴 수 있음)
+2. **Testing Environment** (제약사항 — Positive/Neutral/Negative)
+3. **Technical Summary** (영역별 그룹화 + risk heat map)
+4. **Technical Findings & Recommendation** (🔴 리포트 핵심 대부분)
+   - 표 형식: Ref / Risk(H/M/L) / Issue & Implications / Recommendations
+   - **Attack narrative**: 공격 과정 이야기 형식 (복잡하면 Appendix로)
+   - ⭐ **기술 심각도 ≠ 비즈니스 리스크**
+   - **Remediation 원칙**:
+     - 모호함 없이 명확·간결·철저
+     - 넓은 해결책 ❌ → 구체적
+     - 이론적 ❌ → **실용적(practical)**
+     - **여러 단계를 한 해결책에 섞지 말 것** — 각 단계 별도로
+   - 재현 방법: ① URL/엔드포인트 ② 트리거 방법 (당연한 단계도 명시)
+5. **Appendices / Further Info / References**
+   - 흐름 깨는 긴 내용(사용자 목록·큰 PoC)은 Appendix로.
+   - References는 **가장 권위 있는 출처만** + 제대로 인용.
+
+### 독자 고려
+- **경영진(C-level)**: 기술 X, 결과·영향 중심.
+- **기술 스태프**: 무엇이·왜·어떻게 고치는지 + 예방법.
+
+---
+
+# 🔴 OSCP 시험 핵심 요약
+
+오늘 배운 것 중 **시험에 직접 영향 주는 것만** 추림:
+
+1. **챌린지 랩 4–6이 실제 OSCP+ 시험에 가장 가까움.** 랩 7–10은 범위 밖 — 시간 낭비 금지.
+2. **랩 머신을 많이 풀수록 합격률 직접 상승.** 지름길 없음 — 꾸준히 풀어라.
+3. **리포트가 합격을 좌우한다.** 랩을 뚫어도 리포트 부실 = 탈락.
+4. **지금부터 노트 습관**: Obsidian/CherryTree에 머신별 구조(Scope / RoE / enumeration / **PoC** / 스크린샷 / remediation).
+5. **PoC payload와 재현 단계를 정확히 기록** — 나중에 리포트에 그대로 들어감.
+6. **스크린샷 = 증거**: 한 장에 개념 하나, 클라이언트 요소 포함, 텍스트로 보완.
+7. **CIA 삼요소 + 최소권한 + Defense in Depth**는 모든 공격/방어 사고의 기본 틀.
+
+> 💡 **다음 할 일**: 권장 순서대로 Linux Basics → Windows Basics → Networking → Scripting 기초 모듈부터. 그리고 **지금 리포트 노트 템플릿을 미리 만들어두기.**
